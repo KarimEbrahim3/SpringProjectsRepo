@@ -1,5 +1,6 @@
 package com.global.hr.repository;
 
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,8 @@ List<Employee> findByNameContaining(String name);
 		+ "FROM hr.employees\r\n"
 		+ "WHERE first_name LIKE '%' || :empName || '%' or salary >= :empSal")
 List<Employee>findCustomEmployee(@Param("empName") String name ,@Param("empSal") Double salary);
+
+@Modifying
+@Query(value ="update EMPLOYEES set salary = :salParam where EMPLOYEE_ID = :empIdParam")
+int updateSalary(@Param("salParam") Double salary,@Param("empIdParam") Long id );
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.global.hr.entity.Employee;
 import com.global.hr.repository.EmployeeRepo;
+import com.global.hr.service.EmployeeService;
 
 import tools.jackson.databind.ObjectMapper;
 
@@ -28,51 +29,56 @@ import tools.jackson.databind.ObjectMapper;
 public class EmployeeController {
 	Logger log = LoggerFactory.getLogger(EmployeeController.class);
 @Autowired
-EmployeeRepo empRepo;
+EmployeeService empServ;
 @GetMapping("/count")
 	public long countEmp() {
-		return empRepo.count();
+		return empServ.countEmp();
 	}
 
 @GetMapping("/{id}")
-public Optional<Employee> findById(@PathVariable Long id,@RequestHeader(name = "lang-val") String langVal) {
+public Employee findById(@PathVariable Long id,@RequestHeader(name = "lang-val") String langVal) {
 	log.info("Language is ==> "+langVal);
-	return empRepo.findById(id);
+	return empServ.findById(id);
 }
 
 @GetMapping("")
 public ResponseEntity<?> findAll() {
-	return new ResponseEntity(empRepo.findAll(),HttpStatus.OK);
+	return new ResponseEntity(empServ.findAll(),HttpStatus.OK);
 }
 
 @GetMapping("/find/{name}")
 public Iterable<Employee> findAllByName(@PathVariable String name) {
-	return empRepo.findByNameContaining(name);
+	return empServ.findByNameContaining(name);
 }
 
 @GetMapping("/find/{name}/{sal}")
 public Iterable<Employee> findCustomEmp(@PathVariable String name,@PathVariable Double sal) {
-	return empRepo.findCustomEmployee(name, sal);
+	return empServ.findCustomEmployee(name, sal);
 }
 
 @GetMapping("/find")
 public Iterable<Employee> findCustomEmpReqParam(@RequestParam String name,@RequestParam Double sal) {
-	return empRepo.findCustomEmployee(name, sal);
+	return empServ.findCustomEmployee(name, sal);
 }
 
 @PostMapping("")
 public Employee createEmp(@RequestBody Employee emp) {
-	return empRepo.save(emp);
+	return empServ.createEmp(emp);
 }
 
 @PutMapping("")
 public Employee updateEmp(@RequestBody Employee emp) {
-	return empRepo.save(emp);
+	return empServ.updateEmp(emp);
 }
 
 @DeleteMapping("/{id}")
 public void deleteEmp(@PathVariable Long id) {
-	 empRepo.deleteById(id);
+	empServ.deleteEmp(id);
+}
+
+@PutMapping("/salary")
+int updateSalary(@RequestParam Double sal,@RequestParam Long id ) {
+	return empServ.updateSalary(sal, id);
 }
 
 public void testJackson() {
@@ -89,6 +95,8 @@ public void testJackson() {
 	Employee emp = om.readValue(str, Employee.class);
 	str = om.writerWithDefaultPrettyPrinter().writeValueAsString(emp);
 }
+
+
 //@PostMapping("")
 //public int insertEmp() {
 //	return empRepo.save(new Employee(null, null, null));
