@@ -2,7 +2,7 @@ package com.global.hr.entity;
 
 import java.util.Date;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity	
@@ -32,13 +33,25 @@ public class Employee {
 	private String jobId;
 	@Column(name = "EMAIL")
 	private String email;
-	@Column(name = "DEPARTMENT_ID")
-	private String department_id;
+	@Column(name = "DEPARTMENT_ID", insertable = false, updatable = false)
+	private String departmentId;
 	
+
 	@ManyToOne
 	@JoinColumn(name = "DEPARTMENT_ID")
+	@JsonIgnore
 	private Department dept;
 	
+	@OneToOne()
+	@JoinColumn(name = "USER_ID")
+	private User user;
+	
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -50,6 +63,13 @@ public class Employee {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Department getDept() {
+		return dept;
+	}
+	public void setDept(Department dept) {
+		this.dept = dept;
 	}
 	public String getLastName() {
 		return lastName;
@@ -80,5 +100,11 @@ public class Employee {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getDepartmentId() {
+		return departmentId;
+	}
+	public void setDepartmentId(String departmentId) {
+		this.departmentId = departmentId;
 	}
 }

@@ -1,10 +1,13 @@
 package com.global.hr.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,8 +18,18 @@ public class Department {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "DEPARTMENT_ID")
 	private Long id;
-	@Column(name = "DEPARTMENT_Name")
+	@Column(name = "DEPARTMENT_NAME")
     private String deptName;
+	
+	@OneToMany(mappedBy = "dept")
+	private List<Employee> empList;
+	
+	public List<Employee> getEmpList() {
+		return empList;
+	}
+	public void setEmpList(List<Employee> empList) {
+		this.empList = empList;
+	}
 	public Long getId() {
 		return id;
 	}
