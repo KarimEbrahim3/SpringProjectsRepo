@@ -6,16 +6,43 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityResult;
+import jakarta.persistence.FieldResult;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedNativeQuery;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 
 @Entity	
 @Table(name = "EMPLOYEES")
+@NamedQuery(name = "Employee.findBySalary", query = "select emp from Employee emp where salary>= :salary")
+
+@SqlResultSetMapping(name = "empMapping",entities = @EntityResult(entityClass = Employee.class,fields = {
+		@FieldResult(name = "id",column = "EMPLOYEE_ID"),
+		@FieldResult(name = "name",column = "FIRST_NAME"),
+		@FieldResult(name = "lastName",column = "LAST_NAME"),
+		@FieldResult(name = "salary",column = "SALARY"),
+		@FieldResult(name = "jobId",column = "JOB_ID"),
+		@FieldResult(name = "email",column = "EMAIL"),
+		@FieldResult(name = "departmentId", column = "DEPARTMENT_ID")
+}))
+@NamedNativeQuery(name = "Employee.findByDepartmentNative",query = "select EMPLOYEE_ID,\r\n"
+		+ "       FIRST_NAME,\r\n"
+		+ "       LAST_NAME,\r\n"
+		+ "       SALARY,\r\n"
+		+ "       HIRE_DATE,\r\n"
+		+ "       JOB_ID,\r\n"
+		+ "       EMAIL,\r\n"
+		+ "       DEPARTMENT_ID,\r\n"
+		+ "       USER_ID\r\n"
+		+ "from hr.employees\r\n"
+		+ "where department_id = :deptIdP", resultSetMapping = "empMapping")
 public class Employee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +61,7 @@ public class Employee {
 	@Column(name = "EMAIL")
 	private String email;
 	@Column(name = "DEPARTMENT_ID", insertable = false, updatable = false)
-	private String departmentId;
+	private Long departmentId;
 	
 
 	@ManyToOne
@@ -46,6 +73,14 @@ public class Employee {
 	@JoinColumn(name = "USER_ID")
 	private User user;
 	
+	
+	
+	public Employee(Long id, String name, String lastName) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.lastName = lastName;
+	}
 	public User getUser() {
 		return user;
 	}
@@ -101,10 +136,10 @@ public class Employee {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getDepartmentId() {
+	public Long getDepartmentId() {
 		return departmentId;
 	}
-	public void setDepartmentId(String departmentId) {
+	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
 	}
 }

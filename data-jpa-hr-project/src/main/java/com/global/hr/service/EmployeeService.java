@@ -3,9 +3,16 @@ package com.global.hr.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.global.hr.HRStatisticsProjection;
 import com.global.hr.entity.Employee;
+import com.global.hr.projection.EmployeeProjection;
 import com.global.hr.repository.EmployeeRepo;
 
 @Service
@@ -32,10 +39,26 @@ public class EmployeeService {
 	
 	public List<Employee> findByDepartment(Long deptId) {
 		
-		return empRepo.findByDepartment(deptId);
+		return empRepo.findByDepartmentNative(deptId);
+	}
+	
+public Page<Employee> findAllSorting() {
+	Pageable page = PageRequest.of(1, 8, Sort.by(Direction.DESC,"name")) ;
+		return empRepo.findAll(page);
 	}
 	
 	public List<Employee> findByNameDeptContain(String empName , String deptName){
 		return empRepo.findByNameContainingOrDeptDeptNameContaining(empName,deptName);
-	};
+	}
+	
+	public List<Employee> findBySalary(Double salary){
+		return empRepo.findBySalary(salary);
+	}
+	
+	public HRStatisticsProjection getHrStatistics() {
+		return empRepo.getHrStatistics();
+	}
+	public List<EmployeeProjection> findEmpsProjection(){
+		return empRepo.findEmpsProjection();
+	}
 }
