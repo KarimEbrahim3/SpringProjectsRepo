@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -20,8 +22,21 @@ public class User {
 	@Column(name = "PASSWORD")
 	private String password;
 	
+	
+	public User() {
+		super();
+	}
+	public User(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
 	@OneToOne(mappedBy = "user")
 	Employee emp;
+	
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID")
+    private Role role;
 	
 	public Employee getEmp() {
 		return emp;
