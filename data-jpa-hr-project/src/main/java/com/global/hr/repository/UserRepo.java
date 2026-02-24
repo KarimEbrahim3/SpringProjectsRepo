@@ -1,5 +1,8 @@
 package com.global.hr.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +17,7 @@ public interface UserRepo extends JpaRepository<User, Long>{
 	@Modifying
 	@Query("UPDATE User u SET u.role = :role")
 	int updateAllUsersRole(@Param("role") Role role);
+	
+@EntityGraph(attributePaths = {"role"})
+	public List<User> findAll() ;
 }

@@ -31,4 +31,9 @@ private UserService userServ;
 		userServ.addRoleForAllUsers(roleName);
 		return ResponseEntity.ok(null);
 	}
+	
+	@GetMapping()
+	public ResponseEntity<?> findAllUsers() {
+		return ResponseEntity.ok(userServ.findAllUsers());
+	}
 }
