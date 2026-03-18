@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,10 @@ import com.global.hr.entity.Employee;
 import com.global.hr.projection.EmployeeProjection;
 import com.global.hr.service.EmployeeService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+
+@Validated
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -31,12 +36,13 @@ public class EmployeeController {
 	}
 	
 	@PostMapping()
-	public Employee createEmployee(@RequestBody Employee emp) {
-		return empServ.createEmployee(emp);
+	public Employee createEmployee(@RequestBody @Valid Employee emp) {
+		return (Employee) empServ.createEmployee(emp);
 	}
 	
 	@PutMapping()
-	public Employee updateEmployee(@RequestBody Employee emp) {
+	public Employee updateEmployee(@RequestBody @Valid
+			Employee emp) {
 
 		return empServ.updateEmployee(emp);
 	}
@@ -52,7 +58,7 @@ public class EmployeeController {
 	};
 	
 	@GetMapping("/salary")
-	public ResponseEntity<?> findBySalary(@RequestParam Double salary){
+	public ResponseEntity<?> findBySalary(@RequestParam @Max(value = 200000) Double salary){
 		return ResponseEntity.ok(empServ.findBySalary(salary));
 	};
 	

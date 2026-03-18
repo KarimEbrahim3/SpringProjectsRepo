@@ -1,11 +1,21 @@
 package com.global.hr.entity;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
+import org.hibernate.annotations.Formula;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.global.hr.base.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EntityResult;
 import jakarta.persistence.FieldResult;
 import jakarta.persistence.GeneratedValue;
@@ -16,8 +26,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PostLoad;
 import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity	
 @Table(name = "EMPLOYEES")
@@ -43,15 +57,18 @@ import jakarta.persistence.Table;
 		+ "       USER_ID\r\n"
 		+ "from hr.employees\r\n"
 		+ "where department_id = :deptIdP", resultSetMapping = "empMapping")
-public class Employee {
+
+public class Employee extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "EMPLOYEE_ID")
 	private Long id;
+	@NotNull
 	@Column(name = "FIRST_NAME")
 	private String name;
 	@Column(name = "LAST_NAME")
 	private String lastName;
+	@Min(value = 1000)
 	@Column(name = "SALARY")
 	private Double salary;
 	@Column(name = "HIRE_DATE")
@@ -62,6 +79,14 @@ public class Employee {
 	private String email;
 	@Column(name = "DEPARTMENT_ID", insertable = false, updatable = false)
 	private Long departmentId;
+	
+	@Transient
+	private String fullName;
+	
+	@Formula("FIRST_NAME || ' ' || LAST_NAME")
+	private String fullNameSubQuery;
+
+
 	
 
 	@ManyToOne
@@ -75,11 +100,24 @@ public class Employee {
 	
 	
 	
+	public Employee() {
+		super();
+	}
+
+
 	public Employee(Long id, String name, String lastName) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
+	}
+	
+	
+	public String getFullName() {
+		return fullName;
+	}
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 	public User getUser() {
 		return user;
@@ -141,5 +179,20 @@ public class Employee {
 	}
 	public void setDepartmentId(Long departmentId) {
 		this.departmentId = departmentId;
+	}
+	
+	public String getFullNameSubQuery() {
+		return fullNameSubQuery;
+	}
+
+
+	public void setFullNameSubQuery(String fullNameSubQuery) {
+		this.fullNameSubQuery = fullNameSubQuery;
+	}
+
+
+	@PostLoad
+	private void concatName() {
+		setFullName(getName() + " " + getLastName());
 	}
 }

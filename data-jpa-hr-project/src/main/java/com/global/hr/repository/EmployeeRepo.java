@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.global.hr.HRStatisticsProjection;
+import com.global.hr.base.BaseRepository;
 import com.global.hr.entity.Employee;
 import com.global.hr.projection.EmployeeProjection;
 
@@ -16,7 +17,7 @@ import java.util.List;
 
 
 @Repository
-public interface EmployeeRepo extends JpaRepository<Employee, Long>{
+public interface EmployeeRepo extends BaseRepository<Employee, Long>{
 public List<Employee> findByDepartmentId(Long deptId);
 
 

@@ -11,12 +11,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.global.hr.HRStatisticsProjection;
+import com.global.hr.base.BaseEntity;
+import com.global.hr.base.BaseService;
 import com.global.hr.entity.Employee;
 import com.global.hr.projection.EmployeeProjection;
 import com.global.hr.repository.EmployeeRepo;
 
 @Service
-public class EmployeeService {
+public class EmployeeService extends BaseService<BaseEntity, String>{
 
 	@Autowired
 	private EmployeeRepo empRepo;
@@ -25,9 +27,7 @@ public class EmployeeService {
 		return empRepo.findById(id).orElseThrow();
 	}
 	
-	public Employee createEmployee(Employee emp) {
-		return empRepo.save(emp);
-	}
+	
 	
 	public Employee updateEmployee(Employee emp) {
 		Employee curEmp = empRepo.findById(emp.getId()).get();

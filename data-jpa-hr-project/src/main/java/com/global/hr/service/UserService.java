@@ -38,4 +38,8 @@ public class UserService {
 	public List<User> findAllUsers() {
 		return userRepo.findAll();
 	}
+	
+	public int deleteByRoleId(Long id) {
+		return userRepo.deleteByRoleId(id);
+	};
 }

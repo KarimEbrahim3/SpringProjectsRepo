@@ -2,6 +2,7 @@ package com.global.hr.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,4 +37,9 @@ private UserService userServ;
 	public ResponseEntity<?> findAllUsers() {
 		return ResponseEntity.ok(userServ.findAllUsers());
 	}
+	
+	@DeleteMapping("/userdelete/{id}")
+	public ResponseEntity<?> deleteByRoleId(@PathVariable Long id) {
+		return ResponseEntity.ok(userServ.deleteByRoleId(id));
+	};
 }

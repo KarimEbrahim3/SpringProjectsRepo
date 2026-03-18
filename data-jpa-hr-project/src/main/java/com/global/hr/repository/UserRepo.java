@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.global.hr.entity.Role;
 import com.global.hr.entity.User;
@@ -20,4 +21,8 @@ public interface UserRepo extends JpaRepository<User, Long>{
 	
 @EntityGraph(attributePaths = {"role"})
 	public List<User> findAll() ;
+@Transactional
+@Modifying
+@Query("delete from User where role.roleId = :id")
+int deleteByRoleId(Long id);
 }
