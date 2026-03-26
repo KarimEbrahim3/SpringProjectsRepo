@@ -16,9 +16,10 @@ import com.global.hr.base.BaseService;
 import com.global.hr.entity.Employee;
 import com.global.hr.projection.EmployeeProjection;
 import com.global.hr.repository.EmployeeRepo;
+import com.global.hr.repository.EmployeeSpec;
 
 @Service
-public class EmployeeService extends BaseService<BaseEntity, String>{
+public class EmployeeService {
 
 	@Autowired
 	private EmployeeRepo empRepo;
@@ -60,5 +61,10 @@ public Page<Employee> findAllSorting() {
 	}
 	public List<EmployeeProjection> findEmpsProjection(){
 		return empRepo.findEmpsProjection();
+	}
+	
+	public List<Employee> findByEmpSpec(String empName){
+		EmployeeSpec empS = new EmployeeSpec(empName);
+		return empRepo.findAll(empS);
 	}
 }

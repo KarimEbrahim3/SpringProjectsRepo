@@ -35,10 +35,10 @@ public class EmployeeController {
 		return empServ.findById(id);
 	}
 	
-	@PostMapping()
-	public Employee createEmployee(@RequestBody @Valid Employee emp) {
-		return (Employee) empServ.createEmployee(emp);
-	}
+//	@PostMapping()
+//	public Employee createEmployee(@RequestBody @Valid Employee emp) {
+//		return (Employee) empServ.createEmployee(emp);
+//	}
 	
 	@PutMapping()
 	public Employee updateEmployee(@RequestBody @Valid
@@ -76,5 +76,10 @@ public ResponseEntity<?> findAllSorting() {
 	@GetMapping("/projection")
 	public ResponseEntity<?> findEmpsProjection(){
 		return ResponseEntity.ok(empServ.findEmpsProjection());
+	}
+	
+	@GetMapping("/spec/{name}")
+	public ResponseEntity<?> findByEmpSpec(@PathVariable String name) {
+		return ResponseEntity.ok(empServ.findByEmpSpec(name));
 	}
 }

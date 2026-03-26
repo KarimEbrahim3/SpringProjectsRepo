@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface BaseRepository <T extends BaseEntity,ID>extends JpaRepository<T, ID>{
 
 	
-	@Modifying
-	@Transactional
-	@Query("update #{entityName} t set t.statusCode = :statusCodeP where t.id = :id")
-	void updateEntity(@Param("id") ID id ,@Param("statusCode") String statusCode);
+//	@Modifying
+//	@Transactional
+//	@Query("update #{entityName} t set t.statusCode = :statusCodeP where t.id = :id")
+//	void updateEntity(@Param("id") ID id ,@Param("statusCode") String statusCode);
 }
