@@ -1,8 +1,11 @@
 package com.global.hr.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +17,7 @@ import com.global.hr.HRStatisticsProjection;
 import com.global.hr.base.BaseEntity;
 import com.global.hr.base.BaseService;
 import com.global.hr.entity.Employee;
+import com.global.hr.error.RecordNotFoundException;
 import com.global.hr.projection.EmployeeProjection;
 import com.global.hr.repository.EmployeeRepo;
 import com.global.hr.repository.EmployeeSpec;
@@ -24,8 +28,19 @@ public class EmployeeService {
 	@Autowired
 	private EmployeeRepo empRepo;
 	
+	@Autowired
+	private MessageSource msgSource;
+	
 	public Employee findById(Long id) {
-		return empRepo.findById(id).orElseThrow();
+		Optional<Employee> entity = empRepo.findById(id);
+		if(entity.isPresent()){
+			return entity.get();
+		}
+		else {
+			String [] msgParam = {id.toString()};
+			String msg = msgSource.getMessage("validation.recordNotFound.message",msgParam, LocaleContextHolder.getLocale());
+			throw new RecordNotFoundException(msg);
+		}
 	}
 	
 	
