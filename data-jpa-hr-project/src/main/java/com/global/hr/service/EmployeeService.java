@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,8 @@ public class EmployeeService {
 	@Autowired
 	private MessageSource msgSource;
 	
+	
+	//@Cacheable(value = "byidemployee" ,key = "#id")
 	public Employee findById(Long id) {
 		Optional<Employee> entity = empRepo.findById(id);
 		if(entity.isPresent()){
@@ -43,8 +47,13 @@ public class EmployeeService {
 		}
 	}
 	
+	@Cacheable(value = "employee" ,key = "#root.methodName")
+	private List<Employee> findAll() {
+		return empRepo.findAll();
+
+	}
 	
-	
+	@CacheEvict(value = "updateemployee" ,key = "#root.methodName")
 	public Employee updateEmployee(Employee emp) {
 		Employee curEmp = empRepo.findById(emp.getId()).get();
 		curEmp.setName(emp.getName());

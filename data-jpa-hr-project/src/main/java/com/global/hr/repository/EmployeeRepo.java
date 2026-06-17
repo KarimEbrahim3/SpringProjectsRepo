@@ -3,6 +3,7 @@
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +41,9 @@ HRStatisticsProjection getHrStatistics();
 
 @Query(value = "select new Employee(emp.id,emp.name,emp.lastName) from Employee emp")
 public List<EmployeeProjection> findEmpsProjection();
+
+
+@Override
+@EntityGraph(attributePaths = "department")
+	List<Employee> findAll() ;
 }
